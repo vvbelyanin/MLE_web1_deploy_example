@@ -1,0 +1,43 @@
+data:
+  data_path: "data/weather.csv"
+  splitting_params:
+    val_size: 0.2
+    random_state: 42
+
+features:
+  categorical_features:
+    - 'Location'
+    - 'WindGustDir'
+    - 'WindDir9am'
+    - 'WindDir3pm'
+  numerical_features:
+    - 'MinTemp'
+    - 'MaxTemp'
+    - 'Rainfall'
+    - 'Evaporation'
+    - 'Sunshine'
+    - 'WindGustSpeed'
+    - 'WindSpeed9am'
+    - 'WindSpeed3pm'
+    - 'Humidity9am'
+    - 'Humidity3pm'
+    - 'Pressure9am'
+    - 'Pressure3pm'
+    - 'Cloud9am'
+    - 'Cloud3pm'
+    - 'Temp9am'
+    - 'Temp3pm'
+  binary_features:
+    - "RainToday"
+  useless_features:
+    - "Date"
+  target: "RainTomorrow"
+
+model:
+  save_path: "models/model_lgbm_classifier.pickle"
+  metric_path: "models/metrics.json"
+  model: "GradientBoosting"
+  model_params:
+    learning_rate: 0.1
+    max_depth: 5
+    n_estimators: 200
