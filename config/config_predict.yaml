@@ -1,3 +1,3 @@
 model: "models/model_lgbm_classifier.pickle"
-data_path: "data/weather.csv"
-results_path: "data/results/prediction.csv"
+data_path: "data/weather.csv.gz"
+results_path: "data/prediction.csv"

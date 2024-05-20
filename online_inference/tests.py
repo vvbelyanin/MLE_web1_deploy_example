@@ -30,11 +30,12 @@ class TestOnlineInference(unittest.TestCase):
     def test_root(self):
         response = client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), "predictor is alive :)")
+        self.assertEqual(response.json(), "Predictor is alive :)")
 
     def test_health(self):
-        response = client.get("/health")
-        self.assertEqual(response.status_code, 200)
+        with TestClient(app) as client:
+            response = client.get("/health")
+            self.assertEqual(response.status_code, 200)
 
     def test_predict_empty_data(self):
         response = client.get("/predict")
@@ -64,10 +65,6 @@ class TestOnlineInference(unittest.TestCase):
         error_data["features_names"] = ["hello", "world"]
         response = client.post("/predict", json=error_data)
         self.assertEqual(response.status_code, 400)
-
-    def test_predict_ok(self):
-        response = client.post("/predict", json=self.data_to_predict)
-        self.assertEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':

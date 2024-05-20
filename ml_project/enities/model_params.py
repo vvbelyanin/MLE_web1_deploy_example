@@ -11,7 +11,7 @@ from ml_project.enities.feature_params import FeatureParams
 class BoostingParams:
     n_estimators: int = field(default=500)
     max_depth: int = field(default=10)
-    learning_rate: int = field(default=0.1)
+    learning_rate: float = field(default=0.1)
 
 
 @dataclass

@@ -1,9 +1,6 @@
 from random import randrange, choice
 import numpy as np
 
-import sys
-sys.path.append("ml_project/tests")
-
 
 class WeatherGenerator:
 
@@ -13,7 +10,7 @@ class WeatherGenerator:
             'Location': choice(['Albury', 'BadgerysCreek', 'Cobar', 'CoffsHarbour', 'Moree']),
             'MinTemp': str(randrange(7, 15)),
             'MaxTemp': str(randrange(8, 18)),
-            'Rainfall': str(randrange(5, 10)/10),
+            'Rainfall': str(randrange(5, 10) / 10),
             'Evaporation': str(randrange(0, 5)),
             'Sunshine': str(randrange(0, 8)),
             'WindGustDir': choice(['W', 'WNW', 'WSW', 'NE', 'NNW', 'N', 'NNE', 'SW', 'ENE', 'SSE']),
@@ -31,6 +28,7 @@ class WeatherGenerator:
             'Temp9am': str(randrange(-7, 25)),
             'Temp3pm': str(randrange(0, 35)),
             'RainToday': choice(['No', 'Yes']),
+            'RainTomorrow': choice(['0', '1']),
         }
 
     def create_row(self, sep=','):
@@ -49,11 +47,14 @@ class WeatherGenerator:
         return np.array(dataset)
 
 
-def main():
+def create_csv(num_elements = 1000):
     generator = WeatherGenerator()
-    dataset = generator.generate_csv(1000)
-    print(dataset)
+    dataset = generator.generate_csv(num_elements)
     np.savetxt("ml_project/tests/test_data.csv", dataset, delimiter="\n", fmt='%s')
+
+
+def main():
+    create_csv(1000)
     print('saved')
 
 

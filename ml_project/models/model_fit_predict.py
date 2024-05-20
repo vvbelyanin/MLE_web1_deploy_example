@@ -33,9 +33,7 @@ def test_model(pipe: Pipeline, test_x: pd.DataFrame, test_y: pd.Series,
 def save_metrics_to_json(metrics: dict, path: str) -> None:
     metrics_path = os.path.abspath(path)
     with open(metrics_path, "w+") as file:
-        json.dump(metrics, file, indent=6)
-        logger.info(msg="Metrics saved")
-
+        json.dump(metrics, file)
 
 def serialize_model(model: object, path: str):
     with open(path, "wb") as f:

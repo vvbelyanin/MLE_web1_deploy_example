@@ -11,7 +11,6 @@ from fastapi.responses import JSONResponse
 from online_inference.data_utils import (
     InputData,
     OutputData,
-    ModelType,
     get_data,
     get_model,
 )
@@ -33,7 +32,7 @@ model_lgbm = None
 
 @app.get("/")
 def main():
-    return "predictor is alive :)"
+    return "Predictor is alive :)"
 
 
 @app.on_event("startup")
@@ -45,23 +44,24 @@ def startup():
         raise RuntimeError(f"PATH_TO_MODEL not found")
 
     model_lgbm = get_model(model_path)
-    logger.info(msg="Models loaded")
+    logger.info(msg="Model is loaded")
 
 
 @app.post("/predict", response_model=OutputData)
 def predict(request: InputData):
     data = get_data(request)
     logger.info(msg=f"Data loaded")
-
     try:
-        y_pred = model_lgbm.predict_proba(data)
-    except Exception:
+        print(data)
+        y_pred = model_lgbm.predict_proba(data)[:, 1]
+        print('\n\n\n', y_pred, '\n\n\n')
+    except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail="Error: smth went wrong while prediction")
+            detail="Error: something went wrong while prediction")
 
     logger.info(msg=f"Prediction finished. It's OK :) {y_pred}")
-    return OutputData(predicted_values=[str(pred) for pred in y_pred])
+    return OutputData(predicted_values=y_pred)
 
 
 @app.get("/health")
@@ -84,4 +84,4 @@ async def validate_data(
     )
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

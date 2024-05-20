@@ -4,7 +4,6 @@ from enum import Enum
 
 import pickle
 import pandas as pd
-from sklearn.pipeline import Pipeline
 from pydantic import BaseModel, conlist
 
 
@@ -13,13 +12,13 @@ class ModelType(str, Enum):
 
 
 class InputData(BaseModel):
-    data: List[conlist(Union[float, int], min_items=13, max_items=13)]
-    features_names: conlist(str, min_items=13, max_items=13)
-    model: ModelType = ModelType.lgbm
+    data: List[conlist(Union[float, int, str])]
+    features_names: conlist(str)
+    model: ModelType = "lgbm"
 
 
 class OutputData(BaseModel):
-    predicted_values: List[int]
+    predicted_values: List[float]
 
 
 def get_model(path: str):
