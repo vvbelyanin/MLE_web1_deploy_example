@@ -26,7 +26,7 @@ logger.addHandler(handler)
 
 app = FastAPI()
 
-model_lgbm = None
+model_lgbm = None # Переменная, в которой будет храниться модель
 
 # Функция, срабатывающая при запуске сервера
 @app.on_event("startup")
@@ -36,6 +36,7 @@ def startup():
     try:
         model_lgbm = get_model(model_path) # Если успешно, пишем, что всё ок
         logger.info(msg="Model is loaded")
+        model_lgbm = None
 
     except Exception:
         logger.error(f"model not found") # Иначе пишем предупреждение
@@ -60,18 +61,8 @@ def predict(request: InputData):
             status_code=500,
             detail="Error: something went wrong while prediction")
 
-    logger.info(msg=f"Prediction finished. It's OK :) {y_pred}") # Возвращаем результат
-    return OutputData(predicted_values=y_pred)
-
-
-@app.get("/is_ready")
-def is_ready():
-    if model_lgbm is None:
-        raise HTTPException(status_code=500, detail="No model found :(!")
-    return JSONResponse(
-        status_code=200,
-        content=jsonable_encoder({"detail": "Model loaded successfully :)"}),
-    )
+    logger.info(msg=f"Prediction finished. It's OK :) {y_pred}")
+    return OutputData(predicted_values=y_pred) # Возвращаем результат
 
 
 # Функция, срабатывающая при ошибке парсинга данных

@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def main(ip = "127.0.0.1", port = 8000):
-    dataset = pd.read_csv("data/weather.csv.gz").dropna().sample(n=1, random_state=42)
+    dataset = pd.read_csv("data/weather.csv.gz").dropna().sample(n=10, random_state=42)
     dataset.drop(["RainTomorrow"], axis=1, inplace=True)
     data_json = {
         "data": dataset.values.tolist(),
