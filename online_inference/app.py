@@ -1,5 +1,4 @@
 import logging
-import os
 import sys
 import uvicorn
 
@@ -29,43 +28,44 @@ app = FastAPI()
 
 model_lgbm = None
 
+# Функция, срабатывающая при запуске сервера
+@app.on_event("startup")
+def startup():
+    global model_lgbm
+    model_path = "models/model_lgbm_classifier.pickle" # Загружаем модель
+    try:
+        model_lgbm = get_model(model_path) # Если успешно, пишем, что всё ок
+        logger.info(msg="Model is loaded")
 
+    except Exception:
+        logger.error(f"model not found") # Иначе пишем предупреждение
+        raise RuntimeError(f"model not found")
+
+
+# При открытии корневой страницы пишем, что всё хорошо
 @app.get("/")
 def main():
     return "Predictor is alive :)"
 
 
-@app.on_event("startup")
-def startup():
-    global model_lgbm
-    model_path = os.getenv("PATH_TO_MODEL")
-    if model_path is None:
-        logger.error(f"PATH_TO_MODEL not found")
-        raise RuntimeError(f"PATH_TO_MODEL not found")
-
-    model_lgbm = get_model(model_path)
-    logger.info(msg="Model is loaded")
-
-
+# Функция, которая получает данные в post-запросе и возвращает скор
 @app.post("/predict", response_model=OutputData)
 def predict(request: InputData):
-    data = get_data(request)
+    data = get_data(request) # Парсим данные из запроса в DataFrame
     logger.info(msg=f"Data loaded")
     try:
-        print(data)
-        y_pred = model_lgbm.predict_proba(data)[:, 1]
-        print('\n\n\n', y_pred, '\n\n\n')
+        y_pred = model_lgbm.predict_proba(data)[:, 1] # Получаем предикт
     except Exception as e:
-        raise HTTPException(
+        raise HTTPException( # Если что-то идёт не так, выдаём ошибку и код 500
             status_code=500,
             detail="Error: something went wrong while prediction")
 
-    logger.info(msg=f"Prediction finished. It's OK :) {y_pred}")
+    logger.info(msg=f"Prediction finished. It's OK :) {y_pred}") # Возвращаем результат
     return OutputData(predicted_values=y_pred)
 
 
-@app.get("/health")
-def health():
+@app.get("/is_ready")
+def is_ready():
     if model_lgbm is None:
         raise HTTPException(status_code=500, detail="No model found :(!")
     return JSONResponse(
@@ -74,12 +74,14 @@ def health():
     )
 
 
+# Функция, срабатывающая при ошибке парсинга данных
+# (если данные в post запросе имеют неправильный формат)
 @app.exception_handler(RequestValidationError)
 async def validate_data(
     _: Request, exc: RequestValidationError
 ):
     return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
+        status_code=status.HTTP_400_BAD_REQUEST, # Сообщаем об ошибке и пишем, что именно пошло не так
         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
     )
 
