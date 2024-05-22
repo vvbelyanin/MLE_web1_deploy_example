@@ -27,7 +27,6 @@ jobs: # Список джоб
           python -m pip install --upgrade pip
           echo "Install requirements"
           pip install -r requirements.txt
-          pip install marshmallow_dataclass
           echo "Run setup"
           pip install -e .
         
