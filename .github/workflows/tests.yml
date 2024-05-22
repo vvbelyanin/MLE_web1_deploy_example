@@ -1,1 +1,34 @@
+name: Pipeline name  # Имя пайплайна
+env:  # Переменные среды
+  VARIABLE: "var"
 
+on:  # Триггеры для запуска пайплайна
+  workflow_dispatch:  # Ручной запуск через UI Гитхаба
+  pull_request:  # Для пул реквестов
+  push:
+
+jobs: # Список джоб
+  validation: # Имя джобы
+    runs-on: ubuntu-latest
+    steps:   # Действия для нашей job
+      - name: Clone repo  # Клонируем наш репозиторий
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies  # Устанавлиаем Python зависимости
+        run: |
+          echo "We are in directory:"
+          pwd
+          ls
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e
+        
+      - name: Run unit tests  # Запускаем тестики
+        run: |
+          python -m online_inference.tests
+          
