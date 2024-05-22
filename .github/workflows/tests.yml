@@ -25,8 +25,10 @@ jobs: # Список джоб
           pwd
           ls
           python -m pip install --upgrade pip
+          echo "Install requirements"
           pip install -r requirements.txt
-          pip install -e
+          echo "Run setup"
+          pip install -e .
         
       - name: Run unit tests  # Запускаем тестики
         run: |
