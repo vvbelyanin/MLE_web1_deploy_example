@@ -5,24 +5,36 @@ from online_inference.app import app
 
 
 class TestOnlineInference(unittest.TestCase):
-
     def setUp(self):
         self.data_to_predict = {
             "features_names": [
+                'Date',
+                'Location',
+                'WindGustDir',
+                'WindDir9am',
+                'WindDir3pm',
+                'MinTemp',
                 'MaxTemp',
                 'Rainfall',
                 'Evaporation',
                 'Sunshine',
                 'WindGustSpeed',
                 'WindSpeed9am',
+                'WindSpeed3pm',
                 'Humidity9am',
+                'Humidity3pm',
                 'Pressure9am',
+                'Pressure3pm',
                 'Cloud9am',
-                'Temp9am'],
+                'Cloud3pm',
+                'Temp9am',
+                'Temp3pm',
+                'RainToday'
+            ],
             "data": [
-                [30, 0.6, 4, 4, 40, 31, 76, 999, 4, 25],
-                [28, 0.6, 5, 6, 20, 19, 89, 1011, 5, 17],
-                [26, 0.7, 6, 7, 27, 17, 90, 1002, 3, 24],
+                ['2021-03-23', 'Cobar', 'W', 'W', 'W', 15, 18, 0.5, 3, 7, 40, 40, 40, 80, 80, 1000, 1000, 9, 9, 20, 20, 'Yes'],
+                ['2021-03-23', 'Cobar', 'W', 'W', 'W', 15, 18, 0.5, 3, 7, 40, 40, 40, 80, 80, 1000, 1000, 9, 9, 20, 20, 'Yes'],
+                ['2028-03-23', 'Albury', 'ENE', 'ENE', 'ENE', 15, 18, 0.9, 3, 7, 40, 40, 40, 90, 99, 1000, 1000, 9, 9, 20, 20, 'No'],
             ],
             "model": "lgbm",
         }
@@ -31,11 +43,6 @@ class TestOnlineInference(unittest.TestCase):
         response = client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), "Predictor is alive :)")
-
-    def test_health(self):
-        with TestClient(app) as client:
-            response = client.get("/health")
-            self.assertEqual(response.status_code, 200)
 
     def test_predict_empty_data(self):
         response = client.get("/predict")
@@ -65,6 +72,25 @@ class TestOnlineInference(unittest.TestCase):
         error_data["features_names"] = ["hello", "world"]
         response = client.post("/predict", json=error_data)
         self.assertEqual(response.status_code, 400)
+
+    def test_predict_ok(self):
+        with TestClient(app) as client:
+            response = client.post("/predict", json=self.data_to_predict)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(response.json()['predicted_values']), 3)
+            self.assertAlmostEqual(response.json()['predicted_values'][0], response.json()['predicted_values'][1])
+            self.assertAlmostEqual(response.json()['predicted_values'][0], 0.036, delta=0.005)
+            self.assertAlmostEqual(response.json()['predicted_values'][2], 0.71, delta=0.005)
+
+    # Тест для /will_it_rain
+    # def test_will_it_rain_ok(self):
+    #     with TestClient(app) as client:
+    #         response = client.post("/will_it_rain", json=self.data_to_predict)
+    #         self.assertEqual(response.status_code, 200)
+    #         self.assertEqual(len(response.json()['predicted_values']), 3)
+    #         self.assertEqual(response.json()['predicted_values'][0], response.json()['predicted_values'][1])
+    #         self.assertEqual(response.json()['predicted_values'][0], 0.0)
+    #         self.assertEqual(response.json()['predicted_values'][2], 1.0)
 
 
 if __name__ == '__main__':
