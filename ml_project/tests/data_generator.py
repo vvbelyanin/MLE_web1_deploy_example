@@ -50,7 +50,7 @@ class WeatherGenerator:
 def create_csv(num_elements = 1000):
     generator = WeatherGenerator()
     dataset = generator.generate_csv(num_elements)
-    np.savetxt("ml_project/tests/test_data.csv", dataset, delimiter="\n", fmt='%s')
+    np.savetxt("ml_project/tests/help_test_data/test_data.csv", dataset, delimiter="\n", fmt='%s')
 
 
 def main():

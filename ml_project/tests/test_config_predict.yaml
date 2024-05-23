@@ -1,3 +1,0 @@
-model: "models/model_lgbm_classifier.pickle"
-data_path: "ml_project/tests/test_data.csv"
-results_path: "data/results/prediction.csv"

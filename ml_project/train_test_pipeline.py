@@ -68,7 +68,7 @@ def predict_model_pipeline(config_path):
     model = open_model(params.model)
     logger.info(msg="Load model")
 
-    predicted_y = model.predict(df)
+    predicted_y = model.predict_proba(df)[:, 1]
     logger.info(msg="Results predicted")
     save_predict(predicted_y, params.results_path)
     logger.info(msg="Results saved")

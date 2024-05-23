@@ -35,6 +35,7 @@ def save_metrics_to_json(metrics: dict, path: str) -> None:
     with open(metrics_path, "w+") as file:
         json.dump(metrics, file)
 
+
 def serialize_model(model: object, path: str):
     with open(path, "wb") as f:
         pickle.dump(model, f)
@@ -49,6 +50,6 @@ def open_model(path: str) -> GradientBoostingClassifier:
 
 
 def save_predict(predict: np.ndarray, path: str):
-    predict_df = pd.DataFrame({'DEF': predict})
+    predict_df = pd.DataFrame({'Prediction': predict})
     predict_df.to_csv(os.path.abspath(path), index=False)
     logger.info(msg="Predict saved")
