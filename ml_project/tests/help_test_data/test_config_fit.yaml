@@ -1,5 +1,5 @@
 data:
-  data_path: "ml_project/tests/test_data.csv"
+  data_path: "ml_project/tests/help_test_data/test_data.csv"
   splitting_params:
     val_size: 0.2
     random_state: 42
@@ -34,8 +34,8 @@ features:
   target: "RainTomorrow"
 
 model:
-  save_path: "ml_project/tests/test_model_lgbm_classifier.pickle"
-  metric_path: "ml_project/tests/test_metrics.json"
+  save_path: "ml_project/tests/help_test_data/test_model_lgbm_classifier.pickle"
+  metric_path: "ml_project/tests/help_test_data/test_metrics.json"
   model: "GradientBoosting"
   lgbm_params:
     learning_rate: 0.1

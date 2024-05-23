@@ -9,6 +9,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 from ml_project.enities import FeatureParams
 
+pd.set_option('future.no_silent_downcasting', True)
 logger = logging.getLogger(__name__)
 
 
