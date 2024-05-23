@@ -36,8 +36,6 @@ def startup():
     try:
         model_lgbm = get_model(model_path) # Если успешно, пишем, что всё ок
         logger.info(msg="Model is loaded")
-        model_lgbm = None
-
     except Exception:
         logger.error(f"model not found") # Иначе пишем предупреждение
         raise RuntimeError(f"model not found")
