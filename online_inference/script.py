@@ -2,6 +2,9 @@ import requests
 import pandas as pd
 
 
+# Функция для отправки post-запроса.
+# Выбирает n случайных строк из файла weather.csv.gz, упаковывает в json и отправляет
+# На указанный адрес
 def main(ip = "127.0.0.1", port = 8000):
     dataset = pd.read_csv("data/weather.csv.gz").dropna().sample(n=10, random_state=42)
     dataset.drop(["RainTomorrow"], axis=1, inplace=True)

@@ -2,8 +2,10 @@ from random import randrange, choice
 import numpy as np
 
 
+# Создаёт тестовые данные для модели
 class WeatherGenerator:
 
+    # Генерирует случайную запись о погоде
     def generate_data(self):
         return {
             'Date': f"{randrange(2000, 2010)}-{randrange(1, 12)}-{randrange(1, 28)}",
@@ -37,6 +39,7 @@ class WeatherGenerator:
         row = sep.join(list(data.values()))
         return [title_row, row]
 
+    # Создаёт датасет из указанного количества строк
     def generate_csv(self, num_elements):
         dataset = []
         for i in range(num_elements):

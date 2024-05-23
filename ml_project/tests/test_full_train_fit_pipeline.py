@@ -10,11 +10,15 @@ from data_generator import create_csv
 
 class TestFullPipeline(unittest.TestCase):
 
+    # Функция, которая выполняется перед каждым тестом.
+    # У нас должен быть файл test_data.csv с искусственными данными для тестирования
+    # Если его нет, он автоматически создаётся
     def setUp(self):
         if not os.path.exists('help_test_data/test_data.csv'):
             print('creating test dataset')
             create_csv(1000)
 
+    # Тестируем пайплайн для обучения. На выходе ожидаем модель и файл с метриками
     def test_train_pipeline(self):
         config_path = os.path.abspath('ml_project/tests/help_test_data/test_config_fit.yaml')
         train_model_pipeline(config_path)

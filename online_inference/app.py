@@ -7,6 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+# Импортируем вспомогательные функции из data_utils
 from online_inference.data_utils import (
     InputData,
     OutputData,
@@ -14,6 +15,7 @@ from online_inference.data_utils import (
     get_model,
 )
 
+# Настраиваем логгирование
 logger = logging.getLogger()
 handler = logging.StreamHandler(sys.stdout)
 formatter = logging.Formatter(

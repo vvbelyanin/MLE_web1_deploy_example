@@ -16,6 +16,7 @@ from ml_project.models import (
 )
 
 
+# Добавляем логгирование
 def add_logger():
     logger = logging.getLogger()
     formatter = logging.Formatter("%(asctime)s : %(levelname)s : %(message)s")
@@ -28,7 +29,12 @@ def add_logger():
 
 logger = add_logger()
 
-
+# Пайплайн для обучения модели:
+# 1. Загружает параметры обучения из конфига
+# 2. Загружает выборку и делит её на обучающую и тестовую
+# 3. Обрабатывает признаки, приводя к корректному формату
+# 4. Обучает и сохраняет модель
+# 5. Оценивает качество модели на тестовой выборке и записывает значения метрик в файл metrics.json
 def train_model_pipeline(config_path):
     logger.info(msg="*** Training pipeline is started ***")
 
@@ -58,6 +64,11 @@ def train_model_pipeline(config_path):
     logger.info(msg="*** Training pipeline is finished. It's OK :) ***")
 
 
+# Пайплайн для предикта:
+# 1. Загружает параметры предикта из конфига
+# 2. Загружает выборку и приводит признаки к корректному формату
+# 3. Применяет модель
+# 4. Сохраняет результат в файл predictions.csv
 def predict_model_pipeline(config_path):
     logger.info(msg="*** Predicting pipeline is started ***")
 
