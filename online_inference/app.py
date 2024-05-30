@@ -64,6 +64,7 @@ def predict(request: InputData):
     logger.info(msg=f"Prediction finished. It's OK :) {y_pred}")
     return OutputData(predicted_values=y_pred) # Возвращаем результат
 
+
 # Функция, срабатывающая при ошибке парсинга данных
 # (если данные в post запросе имеют неправильный формат)
 @app.exception_handler(RequestValidationError)
