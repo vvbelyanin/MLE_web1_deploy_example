@@ -64,6 +64,23 @@ def predict(request: InputData):
     logger.info(msg=f"Prediction finished. It's OK :) {y_pred}")
     return OutputData(predicted_values=y_pred) # Возвращаем результат
 
+# Функция, которая получает данные в post-запросе 
+# и возвращает бинарный скор
+@app.post("/will_it_rain", response_model=OutputData)
+def predict_rain(request: InputData):
+    data = get_data(request) # Парсим данные из запроса в DataFrame
+    logger.info(msg=f"Data for binary prediction loaded")
+    try:
+        y_proba = model_lgbm.predict_proba(data)[:, 1] # Получаем предикт
+        y_pred = [int(y > 0.6) for y in y_proba]
+
+    except Exception as e:
+        raise HTTPException( # Если что-то идёт не так, выдаём ошибку и код 500
+            status_code=500,
+            detail="Error: something went wrong while binary prediction")
+
+    logger.info(msg=f"Binary prediction finished. It's OK :) {y_pred}")
+    return OutputData(predicted_values=y_pred) # Возвращаем результат
 
 # Функция, срабатывающая при ошибке парсинга данных
 # (если данные в post запросе имеют неправильный формат)
