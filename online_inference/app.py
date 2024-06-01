@@ -65,7 +65,7 @@ def predict(request: InputData):
     return OutputData(predicted_values=y_pred) # Возвращаем результат
 
 # Функция, которая получает данные в post-запросе 
-# и возвращает бинарный скор
+# и возвращает бинарный скор 
 @app.post("/will_it_rain", response_model=OutputData)
 def predict_rain(request: InputData):
     data = get_data(request) # Парсим данные из запроса в DataFrame
